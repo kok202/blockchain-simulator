@@ -1,0 +1,19 @@
+{
+	"compilerOptions": {
+		"module": "commonjs",
+		"moduleResolution": "node",
+		"resolveJsonModule": true,
+		"esModuleInterop": true,
+		"noImplicitReturns": false,
+		"noUnusedLocals": false,
+		"noUnusedParameters": false,
+		"outDir": "build",
+		"sourceMap": true,
+		"strict": true,
+		"target": "es2017",
+		"experimentalDecorators": true,
+		"typeRoots": ["./node_modules/@types"]
+	},
+	"compileOnSave": true,
+	"include": ["src/**/*"]
+}

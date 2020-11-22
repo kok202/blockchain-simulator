@@ -1,0 +1,261 @@
+{
+	"openapi": "3.0.0",
+	"info": {
+		"version": "1.0.0",
+		"title": "Blockchain"
+	},
+	"basePath": "/",
+	"schemes": ["http"],
+	"consumes": ["application/json"],
+	"produces": ["application/json"],
+
+	"definitions": {
+		"Blockchain": {
+			"properties": {
+				"chain": {
+					"type": "array",
+					"$ref": "#/definitions/Block"
+				},
+				"pendingTransactions": {
+					"type": "array",
+					"$ref": "#/definitions/Transaction"
+				},
+				"currentNodeUrl": {
+					"type": "string"
+				},
+				"networkNodeUrls": {
+					"type": "array",
+					"items": { "type": "string" }
+				}
+			}
+		},
+		"Block": {
+			"properties": {
+				"index": {
+					"type": "integer"
+				},
+				"nonce": {
+					"type": "integer"
+				},
+				"timestamp": {
+					"type": "integer"
+				},
+				"hash": {
+					"type": "string"
+				},
+				"previousBlockHash": {
+					"type": "string"
+				},
+				"transactions": {
+					"type": "array",
+					"$ref": "#/definitions/Transaction"
+				}
+			}
+		},
+		"Transaction": {
+			"properties": {
+				"id": {
+					"type": "string"
+				},
+				"amount": {
+					"type": "integer"
+				},
+				"sender": {
+					"type": "string"
+				},
+				"recipient": {
+					"type": "string"
+				}
+			}
+		}
+	},
+
+	"paths": {
+		"/blockchain": {
+			"get": {
+				"tags": ["block"],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"schema": {
+							"$ref": "#/definitions/Blockchain"
+						}
+					}
+				}
+			}
+		},
+		"/blocks/{blockHash}": {
+			"get": {
+				"tags": ["block"],
+				"parameters": [
+					{
+						"name": "blockHash",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"schema": {
+							"$ref": "#/definitions/Block"
+						}
+					}
+				}
+			}
+		},
+		"/blocks/receive": {
+			"post": {
+				"tags": ["block"],
+				"produces": ["application/json"],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/definitions/Block"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"schema": {}
+					}
+				}
+			}
+		},
+		"/mining": {
+			"post": {
+				"tags": ["action"],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"schema": {}
+					}
+				}
+			}
+		},
+		"/consensus": {
+			"post": {
+				"tags": ["action"],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"schema": {}
+					}
+				}
+			}
+		},
+		"/address/{addressId}": {
+			"get": {
+				"tags": ["address"],
+				"parameters": [
+					{
+						"name": "address",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"schema": {}
+					}
+				}
+			}
+		},
+		"/node": {
+			"post": {
+				"tags": ["node"],
+				"parameters": [
+					{
+						"name": "method",
+						"in": "query",
+						"schema": {
+							"type": "string",
+							"enum": ["withBroadcast", "bulk"],
+							"nullable": true
+						}
+					}
+				],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"properties": {
+									"networkNode": { "type": "string" },
+									"networkNodes": { "type": "array", "items": { "type": "string" } }
+								}
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"schema": {}
+					}
+				}
+			}
+		},
+		"/transactions": {
+			"post": {
+				"tags": ["transaction"],
+				"parameters": [
+					{
+						"name": "method",
+						"in": "query",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"enum": ["withBroadcast"]
+						}
+					}
+				],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/definitions/Transaction"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"schema": {}
+					}
+				}
+			}
+		},
+		"/transactions/{transactionId}": {
+			"get": {
+				"tags": ["transaction"],
+				"parameters": [
+					{
+						"name": "transactionId",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"schema": {}
+					}
+				}
+			}
+		}
+	}
+}
